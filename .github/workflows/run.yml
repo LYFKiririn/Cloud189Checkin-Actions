@@ -26,8 +26,6 @@ jobs:
         
     - name: Checkin
       run: |
-        # Start Checkin
-
         user='${{ secrets.USER }}'
         pwd='${{ secrets.PWD }}'
         
@@ -36,22 +34,22 @@ jobs:
 
         for u in ${user[*]}
         do
-          user_list[${#user_list[*]}]=${u}
+        user_list[${#user_list[*]}]=${u}
         done
 
         for p in ${pwd[*]}
         do
-          pwd_list[${#pwd_list[*]}]=${p}
+        pwd_list[${#pwd_list[*]}]=${p}
         done
 
         user_num=${#user_list[*]}
         pwd_num=${#pwd_list[*]}
 
         if [ $user_num != $pwd_num ];then
-          echo "账号和密码个数不对应"
-          exit 1
+        echo "账号和密码个数不对应"
+        exit 1
         else
-          echo "共有 $user_num 个账号，即将开始签到"
+        echo "共有 $user_num 个账号，即将开始签到"
         fi
 
         random_time=$(($RANDOM % 10 + 1))
@@ -60,9 +58,8 @@ jobs:
 
         for ((i=0;i<$user_num;i++))
         do
-          echo "开始签到 ${user_list[$i]} ${pwd_list[$i]}"
-          python3 C189Checkin.py <<EOF
-          ${user_list[$i]}
-          ${pwd_list[$i]}
-          EOF
+        python3 C189Checkin.py <<EOF
+        ${user_list[$i]}
+        ${pwd_list[$i]}
+        EOF
         done
