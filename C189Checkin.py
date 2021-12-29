@@ -91,7 +91,7 @@ def calculate_md5_sign(params):
     return hashlib.md5('&'.join(sorted(params.split('&'))).encode('utf-8')).hexdigest()
 
 def login(username, password):
-    url = "https://cloud.189.cn/web/login.html"
+    url = "https://cloud.189.cn/api/portal/loginUrl.action?redirectURL=https%3A%2F%2Fcloud.189.cn%2Fweb%2Fredirect.html"
     r = s.get(url)
     print(f"result: {r}")
     print(f"text: {r.text}")
