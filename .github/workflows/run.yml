@@ -26,24 +26,24 @@ jobs:
         
     - name: Checkin
       run: |
+        # Start Checkin
+
         user='${{ secrets.USER }}'
         pwd='${{ secrets.PWD }}'
         
         user_list=()
         pwd_list=()
 
-        IFS=","
-
         for u in ${user[*]}
         do
-        echo ${u}
-        user_list[${#user_list[*]}]=${u}
+            echo ${u}
+            user_list[${#user_list[*]}]=${u}
         done
 
         for p in ${pwd[*]}
         do
-        echo ${p}
-        pwd_list[${#pwd_list[*]}]=${p}
+            echo ${p}
+            pwd_list[${#pwd_list[*]}]=${p}
         done
 
         user_num=${#user_list[*]}
@@ -56,18 +56,14 @@ jobs:
         echo "共有 $user_num 个账号，即将开始签到"
         fi
 
-        rand_time=$(($RANDOM % 45))
-        echo "等待 ${random_time} 分钟后开始签到"
-        for((i=1;i<=${random_time};i++));  
-        do
-        echo "倒计时:剩余 $[${random_time}-$i] 分钟"
-        sleep 1m
-        done
+        random_time=$(($RANDOM % 10 + 1))
+        echo "等待 ${random_time} 秒后开始签到"
+        sleep ${random_time}s
 
         for ((i=0;i<$user_num;i++))
         do
-        python3 C189Checkin.py <<EOF
-        ${user_list[$i]}
-        ${pwd_list[$i]}
+            python3 C189Checkin.py <<EOF
+            ${user_list[$i]}
+            ${pwd_list[$i]}
         EOF
         done
