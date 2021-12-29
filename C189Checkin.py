@@ -3,9 +3,9 @@ from urllib import parse
 
 s = requests.Session()
 
+# 获取账号密码输入
 username = ""
 password = ""
-
 if(username == "" or password == ""):
     username = input("账号：")
     print(username[:3] + '****')
@@ -13,7 +13,7 @@ if(username == "" or password == ""):
     print('*******')
 
 def main():
-    #登录
+    # 检查登录
     msg = login(username, password)
     if(msg == "error"):
         return None
@@ -21,7 +21,7 @@ def main():
         pass
     rand = str(round(time.time()*1000))
     
-    #签到
+    # 签到
     surl = f'https://api.cloud.189.cn/mkt/userSign.action?rand={rand}&clientType=TELEANDROID&version=8.6.3&model=SM-G930K'
     headers = {
         'User-Agent':'Mozilla/5.0 (Linux; Android 5.1.1; SM-G930K Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.136 Mobile Safari/537.36 Ecloud/8.6.3 Android/22 clientId/355325117317828 clientModel/SM-G930K imsi/460071114317824 clientChannelId/qq proVersion/1.0.6',
@@ -36,7 +36,7 @@ def main():
     else:
         print(f"已经签到过了，签到获得{netdiskBonus}M空间")
 
-    #抽奖
+    # 抽奖
     url = f'https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_SIGNIN&activityId=ACT_SIGNIN'
     url2 = f'https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_SIGNIN_PHOTOS&activityId=ACT_SIGNIN'
     headers = {
@@ -46,7 +46,7 @@ def main():
         "Accept-Encoding" : "gzip, deflate",
     }
 
-    #第一次抽奖
+    # 第一次抽奖
     response = s.get(url,headers=headers)
     if ("prizeName" in response.text):
         prizeName = response.json()['prizeName']
@@ -60,7 +60,7 @@ def main():
         except:
                 print(str(response.status_code) + response.text)
 
-    #第二次抽奖
+    # 第二次抽奖
     response = s.get(url2,headers=headers)
     if ("prizeName" in response.text):
         prizeName = response.json()['prizeName']
@@ -73,49 +73,6 @@ def main():
                 print(response.text)
         except:
                 print(str(response.status_code) + response.text)
-
-BI_RM = list("0123456789abcdefghijklmnopqrstuvwxyz")
-def int2char(a):
-    return BI_RM[a]
-
-b64map = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-def b64tohex(a):
-    d = ""
-    e = 0
-    c = 0
-    for i in range(len(a)):
-        if list(a)[i] != "=":
-            v = b64map.index(list(a)[i])
-            if 0 == e:
-                e = 1
-                d += int2char(v >> 2)
-                c = 3 & v
-            elif 1 == e:
-                e = 2
-                d += int2char(c << 2 | v >> 4)
-                c = 15 & v
-            elif 2 == e:
-                e = 3
-                d += int2char(c)
-                d += int2char(v >> 2)
-                c = 3 & v
-            else:
-                e = 0
-                d += int2char(c << 2 | v >> 4)
-                d += int2char(15 & v)
-    if e == 1:
-        d += int2char(c << 2)
-    return d
-
-
-def rsa_encode(j_rsakey, string):
-    rsa_key = f"-----BEGIN PUBLIC KEY-----\n{j_rsakey}\n-----END PUBLIC KEY-----"
-    pubkey = rsa.PublicKey.load_pkcs1_openssl_pem(rsa_key.encode())
-    result = b64tohex((base64.b64encode(rsa.encrypt(f'{string}'.encode(), pubkey))).decode())
-    return result
-
-def calculate_md5_sign(params):
-    return hashlib.md5('&'.join(sorted(params.split('&'))).encode('utf-8')).hexdigest()
 
 def login(username, password):
     url = "https://cloud.189.cn/api/portal/loginUrl.action?redirectURL=https%3A%2F%2Fcloud.189.cn%2Fweb%2Fredirect.html"
@@ -155,6 +112,47 @@ def login(username, password):
         print(r.json()['msg'])
         return "error"
 
+def rsa_encode(j_rsakey, string):
+    rsa_key = f"-----BEGIN PUBLIC KEY-----\n{j_rsakey}\n-----END PUBLIC KEY-----"
+    pubkey = rsa.PublicKey.load_pkcs1_openssl_pem(rsa_key.encode())
+    result = b64tohex((base64.b64encode(rsa.encrypt(f'{string}'.encode(), pubkey))).decode())
+    return result
+
+def calculate_md5_sign(params):
+    return hashlib.md5('&'.join(sorted(params.split('&'))).encode('utf-8')).hexdigest()
+
+BI_RM = list("0123456789abcdefghijklmnopqrstuvwxyz")
+def int2char(a):
+    return BI_RM[a]
+
+b64map = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+def b64tohex(a):
+    d = ""
+    e = 0
+    c = 0
+    for i in range(len(a)):
+        if list(a)[i] != "=":
+            v = b64map.index(list(a)[i])
+            if 0 == e:
+                e = 1
+                d += int2char(v >> 2)
+                c = 3 & v
+            elif 1 == e:
+                e = 2
+                d += int2char(c << 2 | v >> 4)
+                c = 15 & v
+            elif 2 == e:
+                e = 3
+                d += int2char(c)
+                d += int2char(v >> 2)
+                c = 3 & v
+            else:
+                e = 0
+                d += int2char(c << 2 | v >> 4)
+                d += int2char(15 & v)
+    if e == 1:
+        d += int2char(c << 2)
+    return d
 
 if __name__ == "__main__":
     main()
