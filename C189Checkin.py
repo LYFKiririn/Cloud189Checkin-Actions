@@ -8,14 +8,20 @@ password = ""
 
 if(username == "" or password == ""):
     username = input("账号：")
+    print(username[:3] + '****')
     password = input("密码：")
 
 def main():
-    login(username, password)
+    #登录
+    msg = login(username, password)
+    if(msg == "error"):
+        return None
+    else:
+        pass
     rand = str(round(time.time()*1000))
+    
+    #签到
     surl = f'https://api.cloud.189.cn/mkt/userSign.action?rand={rand}&clientType=TELEANDROID&version=8.6.3&model=SM-G930K'
-    url = f'https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_SIGNIN&activityId=ACT_SIGNIN'
-    url2 = f'https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_SIGNIN_PHOTOS&activityId=ACT_SIGNIN'
     headers = {
         'User-Agent':'Mozilla/5.0 (Linux; Android 5.1.1; SM-G930K Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.136 Mobile Safari/537.36 Ecloud/8.6.3 Android/22 clientId/355325117317828 clientModel/SM-G930K imsi/460071114317824 clientChannelId/qq proVersion/1.0.6',
         "Referer" : "https://m.cloud.189.cn/zhuanti/2016/sign/index.jsp?albumBackupOpened=1",
@@ -28,24 +34,44 @@ def main():
         print(f"未签到，签到获得{netdiskBonus}M空间")
     else:
         print(f"已经签到过了，签到获得{netdiskBonus}M空间")
+
+    #抽奖
+    url = f'https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_SIGNIN&activityId=ACT_SIGNIN'
+    url2 = f'https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_SIGNIN_PHOTOS&activityId=ACT_SIGNIN'
     headers = {
         'User-Agent':'Mozilla/5.0 (Linux; Android 5.1.1; SM-G930K Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.136 Mobile Safari/537.36 Ecloud/8.6.3 Android/22 clientId/355325117317828 clientModel/SM-G930K imsi/460071114317824 clientChannelId/qq proVersion/1.0.6',
         "Referer" : "https://m.cloud.189.cn/zhuanti/2016/sign/index.jsp?albumBackupOpened=1",
         "Host" : "m.cloud.189.cn",
         "Accept-Encoding" : "gzip, deflate",
     }
+
+    #第一次抽奖
     response = s.get(url,headers=headers)
-    if ("errorCode" in response.text):
-        print(response.text)
+    if ("prizeName" in response.text):
+        prizeName = response.json()['prizeName']
+        print(f"抽奖获得{prizeName}")
     else:
-        description = response.json()['description']
-        print(f"抽奖获得{description}M空间")
+        try:
+            if(response.json()['errorCode'] == "User_Not_Chance"):
+                print("抽奖次数不足")
+            else:
+                print(response.text)
+        except:
+                print(str(response.status_code) + response.text)
+
+    #第二次抽奖
     response = s.get(url2,headers=headers)
-    if ("errorCode" in response.text):
-        print(response.text)
+    if ("prizeName" in response.text):
+        prizeName = response.json()['prizeName']
+        print(f"抽奖获得{prizeName}")
     else:
-        description = response.json()['description']
-        print(f"抽奖获得{description}M空间")
+        try:
+            if(response.json()['errorCode'] == "User_Not_Chance"):
+                print("抽奖次数不足")
+            else:
+                print(response.text)
+        except:
+                print(str(response.status_code) + response.text)
 
 BI_RM = list("0123456789abcdefghijklmnopqrstuvwxyz")
 def int2char(a):
