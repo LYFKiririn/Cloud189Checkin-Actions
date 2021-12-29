@@ -147,10 +147,10 @@ def login(username, password):
     r = s.post(url, data=data, headers=headers, timeout=5)
     if(r.json()['result'] == 0):
         print(r.json()['msg'])
+        redirect_url = r.json()['toUrl']
+        r = s.get(redirect_url)
     else:
         print(r.json()['msg'])
-    redirect_url = r.json()['toUrl']
-    r = s.get(redirect_url)
     return s
     
 
