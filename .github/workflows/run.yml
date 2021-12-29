@@ -52,12 +52,11 @@ jobs:
         echo "共有 $user_num 个账号，即将开始签到"
         fi
 
-        random_time=$(($RANDOM % 10 + 1))
-        echo "等待 ${random_time} 秒后开始签到"
-        sleep ${random_time}s
-
         for ((i=0;i<$user_num;i++))
         do
+        random_time=$(($RANDOM % 10 + 1))
+        echo "第 $i 个账号，等待 ${random_time} 秒后开始签到"
+        sleep ${random_time}s
         python3 C189Checkin.py <<EOF
         ${user_list[$i]}
         ${pwd_list[$i]}
