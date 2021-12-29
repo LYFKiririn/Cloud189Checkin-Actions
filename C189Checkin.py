@@ -39,13 +39,13 @@ def main():
         print(response.text)
     else:
         description = response.json()['description']
-        print(f"抽奖获得{description}")
+        print(f"抽奖获得{description}M空间")
     response = s.get(url2,headers=headers)
     if ("errorCode" in response.text):
         print(response.text)
     else:
         description = response.json()['description']
-        print(f"抽奖获得{description}")
+        print(f"抽奖获得{description}M空间")
 
 BI_RM = list("0123456789abcdefghijklmnopqrstuvwxyz")
 def int2char(a):
@@ -93,8 +93,6 @@ def calculate_md5_sign(params):
 def login(username, password):
     url = "https://cloud.189.cn/api/portal/loginUrl.action?redirectURL=https%3A%2F%2Fcloud.189.cn%2Fweb%2Fredirect.html"
     r = s.get(url)
-    print(f"result: {r}")
-    print(f"text: {r.text}")
     captchaToken = re.findall(r"captchaToken' value='(.+?)'", r.text)[0]
     lt = re.findall(r'lt = "(.+?)"', r.text)[0]
     returnUrl = re.findall(r"returnUrl = '(.+?)'", r.text)[0]
