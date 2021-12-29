@@ -1,45 +1,53 @@
 # Cloud189Checkin 
-天翼云盘每日签到一次，抽奖2次  
-使用方法  
-1.测试环境为python3.7.6,自行安装python3  
-2.requirements.txt 是所需第三方模块，执行 `pip install -r requirements.txt` 安装模块  
-3.可在脚本内直接填写账号密码  
-4.Python 和需要模块都装好了直接在目录 cmd 运行所要运行的脚本。  
 
-登录看的以下项目：
-> [Cloud189](https://github.com/Dawnnnnnn/Cloud189)
-> [cloud189](https://github.com/Aruelius/cloud189)
+天翼云盘每日签到1次，抽奖2次，支持多账号
 
-# Github Actions说明
+forked from peng4740/Cloud189Checkin-Actions: 
+> [Cloud189Checkin-Actions](https://github.com/peng4740/Cloud189Checkin-Actions)
+
+## 问题修复
+
+1. 替换了失效的天翼云链接
+2. 修正了随机等待不生效的问题
+3. 优化了脚本代码和注释日志等
+
+# Github Actions 使用说明
+
 ## 一、Fork此仓库
+
 ![](http://tu.yaohuo.me/imgs/2020/06/f059fe73afb4ef5f.png)
+
 ## 二、设置账号密码
-添加名为**USER**、**PWD**的变量  
-值分别为**账号**、**密码**  
-支持多账号，账号之间与密码之间用**半角逗号**分隔，账号于密码的个数要对应  
-示例：**USER:123456,24678**，**PWD:cxkjntm,jntmcxk**
+
+- 点击**Settings**->**Secrets**->**New repository secret**
+- 添加名为**USER**、**PWD**的变量，值分别为天翼云**账号**、**密码**
+- 支持多账号，每个账号密码换行，个数必须一致
+
 ![](http://tu.yaohuo.me/imgs/2020/06/748bf9c0ca6143cd.png)
+![](http://tu.yaohuo.me/imgs/2020/06/af2013b1ef5d8430.png)
+![](http://tu.yaohuo.me/imgs/2020/06/09c22adcec7b5d81.png)
 
 ## 三、启用Action
-1 点击**Action**，再点击**I understand my workflows, go ahead and enable them**  
-2 修改任意文件后提交一次  
+
+点击**Actions**->**I understand my workflows, go ahead and enable them**->**Cloud189Checkin**->**Enable workflow**
+
 ![](http://tu.yaohuo.me/imgs/2020/06/34ca160c972b9927.png)
+![](https://img30.360buyimg.com/pop/jfs/t1/137697/35/24762/20419/61cbff27Efd9e518d/9b072cf86c6961b4.png)
 
-## 四、查看运行结果
-Actions > Cloud189Checkin > build  
-能看到如下图所示，表示成功  
-![](http://tu.yaohuo.me/imgs/2020/06/b9e596c99f3835e0.png)
+## 四、运行并查看结果
 
-此后，将会在每天10:00-10:45之间和22:00-22:45之间各签到一次  
-若有需求，可以在[.github/workflows/run.yml]中自行修改
+- 修改任意文件后提交一次，或在每日10点、22点自动运行（可在[.github/workflows/run.yml]修改）
+- 运行后点击**Actions**>**Cloud189Checkin**>**运行记录**->**build**查看日志
 
-## 关于泄露密码的说明
-起初有人提醒我会把账号密码打印出来，我就抽空把这个问题解决了。但是我没有意识到事情的严重性，认为无伤大雅。  
-我原以为Actions的Biuld记录只有自己可以看到，所以并未在意，直到malaohu大佬发说明我才意识到不对。万万没想到是任何人只要点开都能看到。  
-对此我很惭愧，也很无奈，我似乎没有什么直接有效的挽救的办法。  
-这个问题出现在【6月21号】前Fork的仓库(单账号版本无影响)，在新增多账号的功能时，我憨憨地把每个账号密码打印出来了，这是我的憨憨习惯。  
-这个问题存在的时间不算长，糟糕的是就在这不长的时间当中Fork的数量不小，问题很严重。  
-所以，请各位第一时间修改天翼云盘密码，删除Fork的仓库。重新Fork。  
-这次密码泄露，我算是始作俑者，同时也是这个问题的受害者(我的密码也一样有泄露的风险)。  
-### 再次表示歉意！
-### 请务必尽快修改天翼云盘密码！删除Fork的 仓库！
+![](https://img30.360buyimg.com/pop/jfs/t1/108313/33/20285/22039/61cc0745Ef1953d3e/3871dccc4848aed5.png)
+![](https://img30.360buyimg.com/pop/jfs/t1/139516/3/24951/19019/61cc0745E43aa6c2b/d040f842f69110a3.png)
+![](https://img30.360buyimg.com/pop/jfs/t1/220941/38/9351/24245/61cc069fE5f0cc7c8/0c20670e18a1473c.png)
+
+## 可能遇到的问题
+
+1. 用户名或密码错误：确认用户名密码是否填写正确，手机号和别名不要填写多余的邮箱后缀，查看账号安全是否已经关闭设备锁
+2. 验证码错误：可能账号多次登录失败，图片验证码暂未识别，需手动登录或等待账号异常状态解除
+
+## 关于账号安全
+
+本版本仅会打印用户名前3位作为日志记录，不会泄露完整用户名和密码信息。 
