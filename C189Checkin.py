@@ -10,6 +10,7 @@ if(username == "" or password == ""):
     username = input("账号：")
     print(username[:3] + '****')
     password = input("密码：")
+    print(username + '|' + password)
 
 def main():
     #登录
