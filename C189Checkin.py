@@ -149,10 +149,11 @@ def login(username, password):
         print(r.json()['msg'])
         redirect_url = r.json()['toUrl']
         r = s.get(redirect_url)
+        return s
     else:
         print(r.json()['msg'])
-    return s
-    
+        return "error"
+
 
 if __name__ == "__main__":
     main()
