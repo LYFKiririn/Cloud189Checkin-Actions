@@ -61,8 +61,5 @@ jobs:
         for ((i=0;i<$user_num;i++))
         do
             echo "开始签到 ${user_list[$i]} ${pwd_list[$i]}"
-            python3 C189Checkin.py <<EOF
-            ${user_list[$i]}
-            ${pwd_list[$i]}
-        EOF
+            python3 C189Checkin.py ${user_list[$i]} ${pwd_list[$i]}
         done
